@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import protectedRoutes from "./routes/protected.route.js";
 
 const app = express()
 
@@ -14,5 +15,7 @@ app.get("/health", (req, res) => {
         message: "Server is perfectly healthy",
     });
 });
+
+app.use("/api", protectedRoutes);
 
 export default app;
