@@ -6,6 +6,7 @@ import configurePassport from "./config/passport.js";
 import authRoutes from "./routes/auth.routes.js";
 import protectedRoutes from "./routes/protected.route.js";
 import taskRoutes from "./routes/task.routes.js";
+import errorMiddleware from "./middlewares/error.middleware.js";
 
 dotenv.config()
 const app = express()
@@ -30,5 +31,7 @@ app.get("/health", (req, res) => {
 app.use("/auth", authRoutes);
 app.use("/api", protectedRoutes);
 app.use("/api/tasks", taskRoutes);
+
+app.use(errorMiddleware);
 
 export default app;

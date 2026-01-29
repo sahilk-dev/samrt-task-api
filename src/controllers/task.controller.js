@@ -1,9 +1,10 @@
 import Task from "../models/Task.model.js"
+import asyncHandler from "../utils/asyncHandler.js";
 import { redisClient } from "../config/redis.js"
 
 const getCacheKey = (userId) => `task:user:${userId}`;
 
-export const createTask = async (req, res) => {
+export const createTask = asyncHandler(async (req, res) => {
     const { title, description } = req.body;
     const userId = req.user.userId;
 
@@ -16,9 +17,9 @@ export const createTask = async (req, res) => {
     await redisClient.del(getCacheKey(userId));
 
     res.status(201).json(task);
-};
+});
 
-export const getTasks = async (req, res) => {
+export const getTasks = asyncHandler (async(req, res) => {
     const userId = req.user.userId;
     const cacheKey = getCacheKey(userId);
 
@@ -43,9 +44,9 @@ export const getTasks = async (req, res) => {
         source: "db",
         data: tasks,
     });
-};
+});
 
-export const updateTask = async (req, res) => {
+export const updateTask = asyncHandler (async(req, res) => {
     const { id } = req.params;
     const userId = req.user.userId;
 
@@ -62,9 +63,9 @@ export const updateTask = async (req, res) => {
     await redisClient.del(getCacheKey(userId));
 
     res.status(200).json(task);
-};
+});
 
-export const deleteTask = async (req, res) => {
+export const deleteTask = asyncHandler (async(req, res) => {
     const { id } = req.params;
     const userId = req.user.userId;
 
@@ -77,4 +78,4 @@ export const deleteTask = async (req, res) => {
     await redisClient.del(getCacheKey(userId));
 
     res.status(200).json({ message: "Task deleted" });
-};
+});
