@@ -5,6 +5,7 @@ import passport from "passport";
 import configurePassport from "./config/passport.js";
 import authRoutes from "./routes/auth.routes.js";
 import protectedRoutes from "./routes/protected.route.js";
+import taskRoutes from "./routes/task.routes.js";
 
 dotenv.config()
 const app = express()
@@ -28,5 +29,6 @@ app.get("/health", (req, res) => {
 // Routes
 app.use("/auth", authRoutes);
 app.use("/api", protectedRoutes);
+app.use("/api/tasks", taskRoutes);
 
 export default app;
