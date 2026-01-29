@@ -1,12 +1,21 @@
+import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
+import passport from "passport";
+import configurePassport from "./config/passport.js";
+import authRoutes from "./routes/auth.routes.js";
 import protectedRoutes from "./routes/protected.route.js";
 
+dotenv.config()
 const app = express()
 
 // Global middlewares
 app.use(cors());
 app.use(express.json());
+
+// Initialize passport
+configurePassport();
+app.use(passport.initialize());
 
 // Health check route
 app.get("/health", (req, res) => {
@@ -16,6 +25,8 @@ app.get("/health", (req, res) => {
     });
 });
 
+// Routes
+app.use("/auth", authRoutes);
 app.use("/api", protectedRoutes);
 
 export default app;
