@@ -8,6 +8,8 @@ import protectedRoutes from "./routes/protected.route.js";
 import taskRoutes from "./routes/task.routes.js";
 import errorMiddleware from "./middlewares/error.middleware.js";
 import rateLimiter from "./middlewares/rateLimiter.middleware.js";
+import swaggerUi from "swagger-ui-express";
+import swaggerSpec from "./config/swagger.js";
 
 dotenv.config()
 const app = express()
@@ -22,6 +24,16 @@ configurePassport();
 app.use(passport.initialize());
 
 // Health check route
+/**
+ * @swagger
+ * /health:
+ *   get:
+ *     summary: Server health check
+ *     tags: [System]
+ *     responses:
+ *       200:
+ *         description: Server is running
+ */
 app.get("/health", (req, res) => {
     res.status(200).json({
         status: "OK",
@@ -33,6 +45,8 @@ app.get("/health", (req, res) => {
 app.use("/auth", authRoutes);
 app.use("/api", protectedRoutes);
 app.use("/api/tasks", taskRoutes);
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use(errorMiddleware);
 
